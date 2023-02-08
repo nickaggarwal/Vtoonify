@@ -35,7 +35,7 @@ from tritonclient.utils import np_to_triton_dtype
 import PIL
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--triton_url", default="34.135.252.166:8001")
+parser.add_argument("--triton_url", default="20.231.248.160:8001")
 args = parser.parse_args()
 
 client = grpcclient.InferenceServerClient(url=f"{args.triton_url}")
