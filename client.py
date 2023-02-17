@@ -33,6 +33,8 @@ import tritonclient.grpc as grpcclient
 from PIL import Image
 from tritonclient.utils import np_to_triton_dtype
 import PIL
+from numpy import asarray
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--triton_url", default="20.231.248.160:8001")
@@ -48,16 +50,15 @@ def generate(prompt):
     image = PIL.Image.open(requests.get(url, stream=True).raw)
     image = PIL.ImageOps.exif_transpose(image)
     image = image.convert("RGB")
-    image_array = np.uint8(image)
+    image_array = asarray(image)
 
+    image_array = np.array([image_array], dtype=np.float32)
     input_text = grpcclient.InferInput("prompt", text_obj.shape,
                                        np_to_triton_dtype(text_obj.dtype))
     input_text.set_data_from_numpy(text_obj)
-
     input_image = grpcclient.InferInput("image", image_array.shape,
-                                       np_to_triton_dtype(image_array.dtype))
+                                       np_to_triton_dtype(np.float32))
     input_image.set_data_from_numpy(image_array)
-
     output_img = grpcclient.InferRequestedOutput("generated_image")
 
     response = client.infer(model_name="pipeline_VToonify",
