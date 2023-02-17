@@ -61,7 +61,7 @@ def generate(prompt):
     output_img = grpcclient.InferRequestedOutput("generated_image")
 
     response = client.infer(model_name="pipeline_VToonify",
-                            inputs=[(input_text, input_image)],
+                            inputs=[input_text, input_image],
                             outputs=[output_img])
     resp_img = response.as_numpy("generated_image")
     print(resp_img.shape)
