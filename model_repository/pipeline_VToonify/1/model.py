@@ -177,8 +177,10 @@ class TritonPythonModel:
             open_cv_image = open_cv_image[:, :, ::-1].copy()
 
             aligned_face, instyle, style_type = self.detect_and_align_image(open_cv_image, 200, 200, 200, 200)
-
-            exstyle = self.exstyle
+            
+            # Load the model based of style
+            exstyle = pb_utils.get_input_tensor_by_name(request, "style")
+            load_model(exstyle)
 
             style_degree: float = 0.5
             style_type: str = input_text
